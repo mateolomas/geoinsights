@@ -5,6 +5,7 @@ from app.api.v1.api import api_router
 from app.db.session import engine, SessionLocal
 from app.db.base import Base
 from app.db.init_data import init_db
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -33,9 +34,12 @@ app.add_middleware(
     max_age=3600,
 )
 
+# Add Prometheus metrics
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
+
 # Include API router
 app.include_router(api_router, prefix="/api/v1")
 
 @app.get("/health")
 async def health_check():
-    return {"status": "ok"} 
+    return {"status": "ok"}

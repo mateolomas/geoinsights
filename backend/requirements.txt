@@ -18,3 +18,4 @@ geopandas>=0.14.3
 pytest>=8.0.1
 httpx>=0.26.0
 email-validator>=2.0.0 
+prometheus-fastapi-instrumentator==7.1.0
