@@ -143,7 +143,7 @@ export default function Map() {
               <div
                 key={data.id}
                 onClick={() => handleMarkerClick(data)}
-                className={`cursor-pointer p-3 rounded-lg transition-all duration-200 ${selectedMarker?.id === data.id ? 'bg-primary-50 dark:bg-gray-700' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+                className={`cursor-pointer p-3 rounded-lg transition-all duration-200 ${selectedMarker?.id === data.id ? 'bg-gray-100 dark:bg-gray-600' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}`}
               >
                 <h3 className="font-medium text-gray-900 dark:text-white">{data.name}</h3>
                 {data.description && (
