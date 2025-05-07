@@ -30,14 +30,36 @@ api.interceptors.request.use(
 // Add a response interceptor to handle errors
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Clear token and redirect to login if unauthorized
-      localStorage.removeItem('token')
-      window.location.href = '/login'
+  async (error) => {
+    const originalRequest = error.config
+
+    // If error is 401 and we haven't tried to refresh the token yet
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+
+      try {
+        // Try to refresh the token
+        const response = await api.post('/auth/refresh')
+        const { access_token } = response.data
+
+        // Update token in localStorage and headers
+        localStorage.setItem('token', access_token)
+        api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`
+
+        // Retry the original request with new token
+        originalRequest.headers.Authorization = `Bearer ${access_token}`
+        return api(originalRequest)
+      } catch (refreshError) {
+        // If refresh fails, clear token and redirect to login
+        localStorage.removeItem('token')
+        delete api.defaults.headers.common['Authorization']
+        window.location.href = `/login?redirect=${window.location.pathname}`
+        return Promise.reject(refreshError)
+      }
     }
+
     return Promise.reject(error)
   }
 )
 
-export default api 
+export default api

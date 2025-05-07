@@ -15,7 +15,7 @@ function classNames(...classes: string[]) {
 
 export default function MainLayout() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Disclosure as="nav" className="bg-white shadow-sm">
         {({ open }) => (
           <>
@@ -70,13 +70,13 @@ export default function MainLayout() {
         )}
       </Disclosure>
 
-      <div className="py-10">
-        <main>
-          <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <div className="flex-grow py-6">
+        <main className="h-full">
+          <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 h-full">
             <Outlet />
           </div>
         </main>
       </div>
     </div>
   )
-} 
+}
